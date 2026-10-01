@@ -1,79 +1,46 @@
-# ⚙️ SolidWorks Batch CAD & Drafting Automation Utility
+# ⚙️ SolidWorks CAD Automation, DFM Verification & Cost Estimation Suite
 
-An industrial automation script interfacing with the **SolidWorks COM API** via Python. Designed to eliminate manual repetitive drafting operations in engineering offices and manufacturing plants.
-
----
-
-## 🎯 What Problem Does This Solve?
-In manufacturing workshops (sheet metal cutting, machining, CNC fabrication), draftspersons spend dozens of hours:
-1. Manually opening drawings one by one to save them as `.DXF` for laser-cutting machines or `.PDF` for quality inspection.
-2. Manually copy-pasting part numbers, materials, quantities, and weights to create procurement Bill of Materials (BOM) spreadsheets.
-
-This tool automates the entire pipeline into a single command-line execution.
+An industrial automation framework interfacing with the **SolidWorks COM API** via Python. Combines batch drafting conversion with automated **Design for Manufacturing (DFM)** rule validation and **Raw Material Cost Estimation**.
 
 ---
 
-## 🌟 Key Features
-- **Batch 2D Drawing Conversion:** Automatically iterates through folders of `.slddrw` files and generates clean, manufacturing-ready `PDF` and `DXF` files.
-- **Automated BOM Extraction:** Interrogates active SolidWorks assembly trees (`ModelDoc2` / `Component2`) to extract:
-  - Part Numbers
-  - Component Descriptions
-  - Quantities & Sub-assembly structures
-  - Material designations (e.g. St37, Al 6061-T6, CK45)
-  - Estimated component mass (kg)
-  - Manufacturing processes (Sheet Metal, CNC Milling, Turning, Standard Hardware)
-- **Cross-Platform Simulation Mode:** Runs seamlessly in demo/simulation mode on any OS (including Linux/macOS) for testing and CI/CD without requiring a live SolidWorks license.
+## 🌟 Advanced Features
+- **Automated DFM Rule Validation:** Automatically validates sheet-metal bend radius limits ($R \ge t$) and minimum hole-to-edge clearances ($d \ge 2t$) before sending files to CNC/laser machines.
+- **Dynamic Raw Material Costing:** Computes mass and multiplies by alloy unit pricing (St37, CK45, Al 6061-T6) to give engineering management early-stage cost estimates.
+- **Batch 2D Drawing Conversion:** Converts `.slddrw` files in bulk into clean `.dxf` (laser/plasma ready) and `.pdf` documents.
+- **Cross-Platform Simulation Mode:** Fully executable on Linux/macOS and headless CI/CD systems without requiring a SolidWorks license.
+
+---
+
+## 🎯 Real-World Applications & Cross-Industry Impact
+
+### ⚙️ Mechanical & Manufacturing Engineering
+* **Sheet Metal Fabrication & Laser Cutting:** Preventing costly shop-floor scrap by catching tight bends or misaligned punch holes automatically.
+* **Procurement & Supply Chain Automation:** Instant generation of Bill of Materials (BOM) with material weights and estimated unit costs for purchasing departments.
+
+### 🌐 Cross-Industry & Software Applications
+* **CAD-as-a-Service (Cloud Manufacturing):** Cloud estimation pipelines (similar to Xometry or Fictiv) providing instant manufacturing quotes from uploaded 3D geometry.
+* **Digital Inventory & ERP Integration:** Feeding structured BOM hierarchies directly into enterprise ERP and MRP databases.
 
 ---
 
 ## 🚀 Installation & Setup
 
-1. **Clone repository:**
-   ```bash
-   git clone https://github.com/your-username/solidworks-cad-automation.git
-   cd solidworks-cad-automation
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
----
-
-## 💻 Usage
-
-### Run full pipeline (Drawings + BOM):
 ```bash
-python cad_batch_tool.py --mode all --output-dir "output_exports" --bom-output "Assembly_BOM_Report.xlsx"
-```
-
-### Export drawings only:
-```bash
-python cad_batch_tool.py --mode drawings --drawings-dir "sample_drawings" --output-dir "dxf_pdf_exports"
-```
-
-### Extract BOM only:
-```bash
-python cad_batch_tool.py --mode bom --assembly "MyAssembly.sldasm" --bom-output "BOM_Output.xlsx"
+git clone https://github.com/ArdavanGhal-Eh/solidworks-cad-automation.git
+cd solidworks-cad-automation
+pip install -r requirements.txt
+python cad_batch_tool.py --mode all
 ```
 
 ---
 
-## 📊 Sample BOM Output Table
-| شماره قطعه (Part Number) | نام قطعه (Component) | تعداد (Qty) | جنس (Material) | وزن (kg) | روش ساخت (Process) |
+## 📊 Sample BOM with DFM & Costing Output
+| شماره فنی (Part Number) | نام قطعه (Component) | وزن کل (kg) | روش ساخت (Process) | وضعیت DFM | برآورد هزینه متریال |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| PN-001 | شاسی اصلی (Main Chassis) | 1 | Steel St37 | 14.50 | برش لیزر و خمکاری |
-| PN-002 | شافت محرک (Drive Shaft) | 2 | Steel CK45 | 2.30 | تراشکاری CNC |
-| PN-003 | فلنج اتصال (Mounting Flange) | 4 | Al 6061-T6 | 0.85 | فرزکاری CNC |
-
----
-
-## 🛠️ Architecture & Tech Stack
-- **Language:** Python 3.10+
-- **CAD API:** SolidWorks COM API (`win32com.client`)
-- **Reporting:** `pandas`, `openpyxl`
-- **Standard Compliance:** DIN / ISO drawing output naming standards
+| PN-001 | شاسی اصلی (Main Chassis) | 14.50 | برش لیزر و خمکاری | ✅ تأیید DFM (Pass) | 942,500 تومان |
+| PN-002 | شفت محرک (Drive Shaft) | 4.60 | تراشکاری CNC | ✅ تأیید ماشین‌کاری | 437,000 تومان |
+| PN-003 | فلنج اتصال (Mounting Flange) | 3.40 | فرزکاری CNC | ✅ تأیید ماشین‌کاری | 1,088,000 تومان |
 
 ---
 
