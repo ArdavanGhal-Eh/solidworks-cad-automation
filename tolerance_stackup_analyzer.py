@@ -85,6 +85,41 @@ class ToleranceStackupAnalyzer:
             "recommendation": "طراحی کاملاً ایمن و مناسب تولید انبوه" if cpk >= 1.33 else "نیاز به بازنگری تلرانس‌ها یا اصلاح زنجیره ابعادی"
         }
 
+    def simulate_monte_carlo(
+        self,
+        dimensions: List[Dict[str, Any]],
+        clearance_limits: Dict[str, float],
+        samples: int = 10_000
+    ) -> Dict[str, Any]:
+        """Runs Monte Carlo statistical simulation across Gaussian dimensional distributions."""
+        np.random.seed(42)
+        total_gaps = np.zeros(samples)
+
+        for dim in dimensions:
+            direction = dim.get('dir', 1)
+            nominal = dim['nominal']
+            tol = dim['tol']
+            # Assume 3-sigma tolerance: sigma = tol / 3.0
+            sigma = tol / 3.0
+            dim_samples = np.random.normal(loc=nominal, scale=sigma, size=samples)
+            total_gaps += direction * dim_samples
+
+        spec_min = clearance_limits.get('min', -np.inf)
+        spec_max = clearance_limits.get('max', np.inf)
+
+        pass_mask = (total_gaps >= spec_min) & (total_gaps <= spec_max)
+        yield_rate_pct = (np.sum(pass_mask) / samples) * 100.0
+
+        return {
+            "mean_gap_mm": round(float(np.mean(total_gaps)), 3),
+            "std_gap_mm": round(float(np.std(total_gaps)), 4),
+            "p01_gap_mm": round(float(np.percentile(total_gaps, 0.1)), 3),
+            "p99_gap_mm": round(float(np.percentile(total_gaps, 99.9)), 3),
+            "yield_rate_percent": round(yield_rate_pct, 2),
+            "defect_rate_ppm": round((100.0 - yield_rate_pct) * 10_000, 1),
+            "samples": samples
+        }
+
 
 def run_demo_stackup():
     analyzer = ToleranceStackupAnalyzer()
