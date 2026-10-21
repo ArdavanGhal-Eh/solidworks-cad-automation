@@ -16,3 +16,6 @@ obj/
 *.suo
 output_exports/
 *.xlsx
+
+# Nightly Hardened Hygiene Rules
+*.key

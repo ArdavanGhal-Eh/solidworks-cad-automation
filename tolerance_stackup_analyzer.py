@@ -123,7 +123,7 @@ class ToleranceStackupAnalyzer:
 
 def run_demo_stackup():
     analyzer = ToleranceStackupAnalyzer()
-    
+
     # 5-component drive shaft assembly stack-up
     dims = [
         {"name": "محفظه شاسی (Chassis Housing)", "nominal": 120.0, "tol": 0.12, "dir": +1},
@@ -132,7 +132,7 @@ def run_demo_stackup():
         {"name": "اسپیسر شفت (Shaft Spacer)", "nominal": 64.5, "tol": 0.08, "dir": -1},
         {"name": "بلبرینگ دوم (Bearing 2 Width)", "nominal": 15.0, "tol": 0.03, "dir": -1},
     ]
-    
+
     limits = {"min": 0.15, "max": 0.85}
     res = analyzer.analyze_stackup(dims, limits)
 
