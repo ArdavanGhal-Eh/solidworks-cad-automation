@@ -119,7 +119,7 @@ class SolidWorksAutomationTool:
 
     def extract_assembly_bom_with_costing(self, assembly_path: str, output_excel: str) -> str:
         logging.info(f"Extracting BOM with Costing & DFM for: {assembly_path}")
-        
+
         sample_components = [
             ("PN-001", "شاسی اصلی (Main Chassis)", 1, "Steel St37", 14.50, "برش لیزر و خمکاری (Sheet Metal)"),
             ("PN-002", "شفت محرک (Drive Shaft)", 2, "Steel CK45", 2.30, "تراشکاری CNC"),
